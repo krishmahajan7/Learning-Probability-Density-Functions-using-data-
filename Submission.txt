@@ -1,0 +1,72 @@
+rollnumber(r)=102303139
+a_r=0.5
+b_r=1.5
+
+ 
+GAN Architecture Description
+
+Generator Architecture
+The Generator network transforms 1-dimensional Gaussian noise into
+synthetic samples of the transformed variable z.
+
+1.  Input Layer:
+    -   Dimension: 1
+    -   Input distribution: Standard Gaussian noise N(0,1)
+2.  Hidden Layer 1:
+    -   Fully connected (Linear) layer with 64 neurons
+    -   Activation: LeakyReLU (negative slope = 0.2)
+    -   Purpose: Initial feature expansion
+3.  Hidden Layer 2:
+    -   Fully connected layer with 128 neurons
+    -   Activation: LeakyReLU
+    -   Purpose: Higher-level representation learning
+4.  Hidden Layer 3:
+    -   Fully connected layer with 64 neurons
+    -   Activation: LeakyReLU
+    -   Purpose: Feature compression before output
+5.  Output Layer:
+    -   Fully connected layer with 1 neuron
+    -   Activation: Tanh
+    -   Purpose: Produces synthetic sample scaled to (-1, 1)
+
+Reason for Using Tanh: Since the real data was scaled to the range (-1,
+1), the Tanh activation ensures that generator outputs lie within the
+same range.
+
+Discriminator Architecture
+
+The Discriminator is a binary classifier that distinguishes between real
+samples and generator-produced samples.
+
+1.  Input Layer:
+    -   Dimension: 1 (scalar value of z)
+2.  Hidden Layer 1:
+    -   Fully connected layer with 128 neurons
+    -   Activation: LeakyReLU
+    -   Purpose: Learn discriminative features
+3.  Hidden Layer 2:
+    -   Fully connected layer with 64 neurons
+    -   Activation: LeakyReLU
+    -   Purpose: Refine feature representation
+4.  Output Layer:
+    -   Fully connected layer with 1 neuron
+    -   Activation: Sigmoid
+    -   Output range: (0, 1)
+    -   Interpretation: Output close to 1 -> Real sample Output close to
+        0 -> Fake sample
+
+Training Configuration
+
+-   Loss Function: Binary Cross Entropy (BCELoss)
+-   Optimizer: Adam
+-   Learning Rate: 0.0002
+-   Beta values: (0.5, 0.999)
+-   Batch Size: 256
+-   Noise Distribution: Standard Gaussian N(0,1)
+
+Conclusion
+The implemented GAN architecture successfully models the unknown
+probability density function of the transformed variable z without
+assuming any parametric distribution. The generator learns to produce
+realistic samples, and the discriminator ensures adversarial training
+stability.
